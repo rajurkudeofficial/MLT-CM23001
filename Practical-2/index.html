@@ -2,286 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Practical 2: MNIST Digit Recognition using CNN</title>
+    <title>MNIST Digit Recognition</title>
+
+    <!-- TensorFlow.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+
+    <!-- Model Logic -->
+    <script defer src="model.js"></script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e5e7eb;
             text-align: center;
         }
-        
-        header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+
+        h1 {
+            margin-top: 20px;
         }
-        
-        header p {
-            font-size: 1.2em;
-            opacity: 0.9;
+
+        canvas {
+            background: black;
+            border: 2px solid white;
+            margin-top: 20px;
+            cursor: crosshair;
         }
-        
-        .content {
-            padding: 40px;
-        }
-        
-        .section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 5px solid #667eea;
-        }
-        
-        .section h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.8em;
-        }
-        
-        .section p {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-        
-        .controls {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin: 20px 0;
-        }
-        
+
         button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
+            margin: 10px;
+            padding: 10px 18px;
             font-size: 16px;
-            border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-weight: 600;
+            border-radius: 6px;
+            border: none;
         }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        #status {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            color: #1976d2;
-            font-weight: 600;
-            border-left: 4px solid #2196f3;
-        }
-        
-        .canvas-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        #digitCanvas {
-            border: 3px solid #667eea;
-            border-radius: 8px;
-            background: white;
-            image-rendering: pixelated;
-        }
-        
-        .prediction-result {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+
+        .clear {
+            background: #ef4444;
             color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin: 20px 0;
-            display: none;
         }
-        
-        .prediction-result.active {
-            display: block;
+
+        .predict {
+            background: #22c55e;
+            color: white;
         }
-        
-        .prediction-result h3 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        
-        .prediction-result .digit {
-            font-size: 4em;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-        
-        .prediction-result .confidence {
-            font-size: 1.3em;
-        }
-        
-        .training-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .info-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        
-        .info-card h4 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 0.9em;
-            text-transform: uppercase;
-        }
-        
-        .info-card .value {
-            font-size: 2em;
-            font-weight: bold;
-            color: #333;
-        }
-        
+
         .note {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            color: #856404;
-        }
-        
-        .note strong {
-            display: block;
-            margin-bottom: 5px;
+            margin-top: 15px;
+            font-size: 14px;
+            opacity: 0.8;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <header>
-            <h1>🧠 MNIST Digit Recognition</h1>
-            <p>Convolutional Neural Network using TensorFlow.js</p>
-        </header>
-        
-        <div class="content">
-            <div class="section">
-                <h2>📋 Practical Aim</h2>
-                <p>Train a Convolutional Neural Network (CNN) on the MNIST handwritten digit dataset using TensorFlow.js and evaluate predictions in a browser-based environment.</p>
-            </div>
-            
-            <div class="section">
-                <h2>🎯 Model Architecture</h2>
-                <p><strong>Layer Structure:</strong></p>
-                <ul style="margin-left: 20px; line-height: 1.8; color: #555;">
-                    <li>Conv2D Layer (32 filters, 3×3 kernel) + ReLU</li>
-                    <li>MaxPooling2D (2×2)</li>
-                    <li>Conv2D Layer (64 filters, 3×3 kernel) + ReLU</li>
-                    <li>MaxPooling2D (2×2)</li>
-                    <li>Flatten Layer</li>
-                    <li>Dense Layer (128 units) + ReLU</li>
-                    <li>Output Layer (10 units) + Softmax</li>
-                </ul>
-                <p style="margin-top: 15px;"><strong>Optimizer:</strong> Adam | <strong>Loss:</strong> Categorical Cross-Entropy</p>
-            </div>
-            
-            <div class="section">
-                <h2>🚀 Training Controls</h2>
-                <div id="status">Ready to load data and train model</div>
-                
-                <div class="controls">
-                    <button id="loadDataBtn" onclick="loadData()">Load MNIST Data</button>
-                    <button id="trainBtn" onclick="trainModel()" disabled>Train Model</button>
-                    <button id="predictBtn" onclick="predictDigit()" disabled>Predict Random Digit</button>
-                </div>
-                
-                <div class="note">
-                    <strong>Note:</strong>
-                    Training runs in your browser. For performance reasons, we use a subset of MNIST (5000 training samples, 1000 test samples) and train for 5 epochs. Check the browser console (F12) for detailed training logs and metrics.
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2>📊 Training Metrics</h2>
-                <div class="training-info">
-                    <div class="info-card">
-                        <h4>Current Epoch</h4>
-                        <div class="value" id="epochValue">-</div>
-                    </div>
-                    <div class="info-card">
-                        <h4>Training Accuracy</h4>
-                        <div class="value" id="trainAccValue">-</div>
-                    </div>
-                    <div class="info-card">
-                        <h4>Training Loss</h4>
-                        <div class="value" id="trainLossValue">-</div>
-                    </div>
-                    <div class="info-card">
-                        <h4>Validation Accuracy</h4>
-                        <div class="value" id="valAccValue">-</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2>🔍 Prediction Result</h2>
-                <div class="canvas-container">
-                    <canvas id="digitCanvas" width="280" height="280"></canvas>
-                </div>
-                <div class="prediction-result" id="predictionResult">
-                    <h3>Predicted Digit</h3>
-                    <div class="digit" id="predictedDigit">-</div>
-                    <div class="confidence">Confidence: <span id="confidenceValue">-</span>%</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Load TensorFlow.js from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
-    
-    <!-- Load our model script -->
-    <script src="model.js"></script>
+
+    <h1>Digit Recognition (MNIST CNN)</h1>
+    <p>Draw a digit (0–9) inside the box</p>
+
+    <canvas id="drawCanvas" width="280" height="280"></canvas>
+
+    <br>
+    <button class="clear" onclick="clearCanvas()">Clear</button>
+    <button class="predict" onclick="predictDigit()">Predict</button>
+
+    <p class="note">
+        👉 Open <b>Console (F12)</b> to see prediction output
+    </p>
+
 </body>
 </html>
