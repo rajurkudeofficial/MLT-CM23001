@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MNIST Digit Recognition</title>
+
+    <!-- TensorFlow.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+
+    <!-- Model Logic -->
+    <script defer src="model.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e5e7eb;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        canvas {
+            background: black;
+            border: 2px solid white;
+            margin-top: 20px;
+            cursor: crosshair;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 18px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            border: none;
+        }
+
+        .clear {
+            background: #ef4444;
+            color: white;
+        }
+
+        .predict {
+            background: #22c55e;
+            color: white;
+        }
+
+        .note {
+            margin-top: 15px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Digit Recognition (MNIST CNN)</h1>
+    <p>Draw a digit (0–9) inside the box</p>
+
+    <canvas id="drawCanvas" width="280" height="280"></canvas>
+
+    <br>
+    <button class="clear" onclick="clearCanvas()">Clear</button>
+    <button class="predict" onclick="predictDigit()">Predict</button>
+
+    <p class="note">
+        👉 Open <b>Console (F12)</b> to see prediction output
+    </p>
+
+</body>
+</html>
