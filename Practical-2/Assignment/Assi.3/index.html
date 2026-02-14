@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CNN vs Dense Network – MNIST Comparison</title>
+
+    <script defer src="model.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e5e7eb;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            margin: 30px auto;
+            border-collapse: collapse;
+            width: 70%;
+            background: #020617;
+        }
+
+        th, td {
+            border: 1px solid #334155;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #1e293b;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #22c55e;
+        }
+
+        .note {
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Performance Comparison: CNN vs Dense Network</h1>
+
+    <table>
+        <tr>
+            <th>Model</th>
+            <th>Architecture</th>
+            <th>Epochs</th>
+            <th>Accuracy</th>
+        </tr>
+
+        <tr>
+            <td>CNN</td>
+            <td>Conv2D + MaxPooling + Dense</td>
+            <td>5</td>
+            <td class="score" id="cnnAcc">--</td>
+        </tr>
+
+        <tr>
+            <td>Dense Network</td>
+            <td>Flatten + Dense</td>
+            <td>5</td>
+            <td class="score" id="denseAcc">--</td>
+        </tr>
+    </table>
+
+    <p class="note">
+        Accuracy values are obtained after training on the MNIST dataset.
+        <br>
+        (Check browser console for training logs)
+    </p>
+
+</body>
+</html>
