@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Text Sentiment Analysis – Practical 3</title>
+
+  <!-- TensorFlow.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.18.0/dist/tf.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f7;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      font-size: 16px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .result {
+      margin-top: 15px;
+      padding: 12px;
+      background: #f4f6f8;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .task {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 2px solid #ddd;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <h1>Text Sentiment Analysis</h1>
+    <p>
+      This practical demonstrates sentiment classification using
+      TensorFlow.js with a self-trained model and comparison with a pre-trained model.
+    </p>
+
+    <!-- ================= TASK 2 ================= -->
+    <div class="task">
+      <h2>Task 2: Test Model on Custom Sentence</h2>
+
+      <label><b>Enter a sentence:</b></label>
+      <textarea id="inputText" placeholder="Type your sentence here..."></textarea>
+
+      <br>
+      <button onclick="predictSelf()">Predict (Self-Trained Model)</button>
+      <button onclick="clearText()">Clear</button>
+
+      <div class="result" id="selfResult">
+        Result will appear here...
+      </div>
+    </div>
+
+    <!-- ================= TASK 3 ================= -->
+    <div class="task">
+      <h2>Task 3: Compare Pre-trained vs Self-trained Model</h2>
+
+      <p>
+        The same sentence is evaluated by both models and confidence scores are compared.
+      </p>
+
+      <button onclick="compareModels()">Compare Models</button>
+
+      <div class="result" id="compareResult">
+        Comparison result will appear here...
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Logic File -->
+  <script src="model.js"></script>
+</body>
+</html>

@@ -1,110 +1,159 @@
-# MNIST Digit Recognition – CNN and Dense Network Comparison
+# Practical–3: Text Sentiment Analysis using TensorFlow.js
 
-## 📌 Overview
-This practical demonstrates handwritten digit recognition using the **MNIST dataset** and compares the performance of a **Convolutional Neural Network (CNN)** with a **simple Dense (ANN) network**.
-
-The CNN model is trained offline using **Kaggle GPU (Tesla T4 ×2)** for fast and accurate training.  
-The trained model is then deployed in the browser using **TensorFlow.js** for real-time digit classification and performance comparison.
+## Aim
+To design and implement a **Text Sentiment Analysis system** that classifies text as **Positive or Negative**, displays **confidence scores**, and compares a **self-trained model** with an **old (pre-trained / rule-based) model** using **JavaScript and TensorFlow.js (CDN only)**.
 
 ---
 
-## 🎯 Aim
-To train a CNN model on the MNIST dataset, classify handwritten digits using a web-based interface, and compare its performance with a simple dense neural network.
+## Assignment Idea & Approach (Student Proposed)
+
+This practical follows a **custom approach proposed by the student**, consisting of three major tasks:
+
+### Task-1  
+Train a sentiment classifier using a **custom dataset** containing positive and negative sentences.
+
+### Task-2  
+Test the trained model on **user-entered custom sentences** and interpret the **confidence score**.
+
+### Task-3  
+Compare the performance of:
+- A **self-trained deep learning model**
+- An **old pre-trained (rule-based) sentiment model**
+
+The comparison is done **live in the browser** using the same input sentence.
 
 ---
 
-## 🎯 Objectives
-- To train a CNN on the MNIST dataset for 5 epochs and record accuracy
-- To classify user-drawn digits using a trained model
-- To compare accuracy and performance of CNN and Dense networks
-- To understand why CNN performs better for image classification tasks
+## Tools & Technologies Used
+- Python (for dataset handling and training)
+- TensorFlow & Keras (model training)
+- TensorFlow.js (CDN based, no Node.js)
+- JavaScript (logic & inference)
+- HTML & CSS (UI)
+- Google Colab (training environment)
+- VS Code + Live Server (execution)
 
 ---
 
-## 🧠 Task-wise Description
+## Dataset Description (Task-1)
+
+- A **custom dataset** with approximately **10,000 sentences**
+- Columns:
+  - `sentence`
+  - `type` (positive / negative)
+- Neutral sentences were **removed** to focus on **binary classification**
+- Labels used:
+  - Positive → 1
+  - Negative → 0
+
+### Why Neutral Data Was Removed?
+The assignment focuses on **binary sentiment classification**, so removing neutral data reduces ambiguity and improves learning clarity.
 
 ---
 
-## ✅ Task 1: Train a CNN on MNIST and Report Accuracy
+## Model Training (Task-1)
 
-### Description
-A Convolutional Neural Network (CNN) was trained on the MNIST dataset using Kaggle notebooks with **dual Tesla T4 GPU acceleration**. The model was trained for **5 epochs** to achieve high accuracy.
-
-### Output
-- Training Epochs: 5  
-- Final Accuracy: ~98–99%  
-
-### Observation
-Accuracy improves with each epoch due to better feature learning from handwritten digits.
-
----
-
-## ✅ Task 2: Draw a Digit on Canvas and Classify It
-
-### Description
-The trained CNN model was converted into **TensorFlow.js format** and loaded into the browser using JavaScript and CDN.  
-Users can draw digits (0–9) on an HTML canvas, and the model predicts the digit in real time.
-
-### Processing Steps
-Canvas Image
-→ Grayscale Conversion
-→ Resize to 28×28
-→ Normalization (0–1)
-→ CNN Prediction
-
-### Output
-- Predicted digit is displayed in the **browser console**
+- The model was trained in **Google Colab**
+- Model architecture:
+  - Embedding Layer
+  - Global Average Pooling
+  - Dense Hidden Layer
+  - Sigmoid Output Layer
+- After training:
+  - Model was exported in **SavedModel format**
+  - Converted into **TensorFlow.js GraphModel**
+  - Tokenizer saved separately as `tokenizer.json`
 
 ---
 
-## ✅ Task 3: Compare CNN and Dense Network Performance
+## Browser Deployment using TensorFlow.js
 
-### Description
-A simple Dense (ANN) network and a CNN were trained separately on the same MNIST dataset for 5 epochs.  
-Their accuracies were compared and displayed on a web page.
+- The trained model is loaded in the browser using:
+  ```js
+  tf.loadGraphModel()
+TensorFlow.js is included using CDN
 
-### Accuracy Comparison
+No Node.js or backend is used (as per assignment rules)
 
-| Model | Epochs | Accuracy |
-|------|------|---------|
-| Dense Network (ANN) | 5 | ~92–94% |
-| CNN | 5 | ~98–99% |
+Input text is:
 
-### Comparison Summary
+Tokenized using the same tokenizer
 
-| Feature | Dense Network | CNN |
-|------|------|------|
-| Spatial Feature Learning | ❌ No | ✅ Yes |
-| Image Understanding | Poor | Excellent |
-| Accuracy | Lower | Higher |
+Converted to tensors
 
----
+Explicitly cast to float32 to match model requirements
+TensorFlow.js is included using CDN
 
-## 📊 Conclusion
-The CNN outperforms the dense network because it preserves spatial relationships in image data and automatically extracts meaningful features such as edges and shapes.  
-Dense networks flatten the image early, resulting in loss of spatial information and lower accuracy.
+No Node.js or backend is used (as per assignment rules)
 
----
+Input text is:
 
-## 🛠 Technologies Used
-- TensorFlow
-- TensorFlow.js (CDN)
-- Kaggle GPU (Tesla T4 ×2)
-- HTML5 Canvas
-- JavaScript
+Tokenized using the same tokenizer
 
----
+Converted to tensors
 
-## ▶️ How to Run
-1. Open the project folder in **VS Code**
-2. Use **Live Server** to serve `index.html`
-3. Draw a digit on the canvas (Task 2)
-4. View accuracy comparison on the web page (Task 3)
-5. Open **Browser Console (F12)** to view prediction logs
+Explicitly cast to float32 to match model requirements
+Folder Structure
+Practical-3/
+└── Assignment/
+    ├── index.html
+    ├── model.js
+    └── Training/
+        ├── model.json
+        ├── group1-shard1of1.bin
+        └── tokenizer.json
+Observations & Limitations
 
----
+Some strong words (e.g., “hated”) may occasionally be misclassified
 
-## 📌 Notes
-- Model training is performed offline for efficiency
-- Browser-based implementation uses only JavaScript (no backend)
-- This practical demonstrates a real-world ML deployment workflow
+This happens due to:
+
+Dataset imbalance
+
+Limited linguistic diversity
+
+Such behavior is common in NLP models trained on synthetic data
+
+This highlights the importance of data quality and preprocessing.
+
+Conclusion
+
+Successfully implemented a complete sentiment analysis pipeline
+
+Covered:
+
+Dataset preparation
+
+Model training
+
+TFJS conversion
+
+Browser deployment
+
+Live comparison of models
+
+The practical demonstrates strong understanding of:
+
+NLP concepts
+
+Deep learning
+
+Real-world deployment challenges
+
+Viva-Ready Key Points
+
+TensorFlow.js enables ML models to run directly in the browser
+
+Confidence score represents prediction probability
+
+Binary classification simplifies sentiment analysis
+
+Rule-based models are interpretable but less flexible
+
+Deep learning models generalize better with large datasets
+
+Developed By
+
+Name: Raj Urkude
+Subject: Machine Learning Techniques
+Practical No: 3
