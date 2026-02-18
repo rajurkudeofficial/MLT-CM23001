@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MobileNet V1 vs V2 Comparison</title>
+
+    <!-- TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.16.0/dist/tf.min.js"></script>
+
+    <!-- MobileNet (supports V1 & V2) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+        }
+        img {
+            max-width: 280px;
+            margin-top: 15px;
+        }
+        .result {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        canvas {
+            margin-top: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Image Classification Comparison</h2>
+<h3>MobileNet V1 vs MobileNet V2</h3>
+
+<input type="file" accept="image/*" onchange="loadImage(event)">
+<br>
+
+<img id="preview">
+
+<div class="result" id="mobilenetV1Result"></div>
+<div class="result" id="mobilenetV2Result"></div>
+
+<canvas id="chart" width="420" height="260"></canvas>
+
+<!-- Scripts -->
+<script src="model.js"></script>
+<script src="model1.js"></script>
+
+</body>
+</html>
