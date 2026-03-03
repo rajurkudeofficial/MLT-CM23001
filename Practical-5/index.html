@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ultimate AI Object Detection</title>
+
+  <!-- TensorFlow.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+
+  <!-- COCO SSD -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🔥 Ultimate Webcam Object Detection</h1>
+<p class="subtitle">Real-Time • AI • Browser Only</p>
+
+<div class="controls">
+  <button id="startBtn">▶ Start</button>
+  <button id="stopBtn">⏹ Stop</button>
+
+  <label>
+    Confidence
+    <input type="range" id="confidence" min="0" max="1" step="0.05" value="0.5">
+    <span id="confValue">0.50</span>
+  </label>
+</div>
+
+<div class="stats">
+  <span id="fps">FPS: 0</span>
+  <span id="status">Status: Idle</span>
+  <span id="primary">Primary Object: None</span>
+</div>
+
+<div class="container">
+  <video id="video" autoplay playsinline></video>
+  <canvas id="canvas"></canvas>
+</div>
+
+<div class="panels">
+  <div>
+    <h3>📊 Detection Count</h3>
+    <ul id="counterList"></ul>
+  </div>
+
+  <div>
+    <h3>📸 Snapshots</h3>
+    <div id="snapshots"></div>
+  </div>
+</div>
+
+<script src="model.js"></script>
+</body>
+</html>
