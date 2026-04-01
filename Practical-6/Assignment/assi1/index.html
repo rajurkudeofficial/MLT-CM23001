@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PoseNet — Skeleton Visualizer</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet@2.2.2/dist/posenet.min.js"></script>
+</head>
+<body>
+  <div class="app-wrapper">
+
+    <header class="app-header">
+      <div class="header-logo">
+        <div class="logo-icon">🦴</div>
+        <span class="logo-text">Skeleton <em>Visualizer</em></span>
+      </div>
+      <nav class="header-nav">
+        <a href="../../index.html" class="nav-link">← Live</a>
+        <a href="index.html" class="nav-link active">Skeleton</a>
+        <a href="../assi2/index.html" class="nav-link">Squats</a>
+        <a href="../assi3/index.html" class="nav-link">Multi-Pose</a>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <div class="video-panel">
+        <div class="video-container" id="videoContainer">
+          <video id="video" autoplay muted playsinline></video>
+          <canvas id="canvas"></canvas>
+          <div class="video-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <p>Loading model…</p>
+          </div>
+          <div class="corner tl"></div><div class="corner tr"></div>
+          <div class="corner bl"></div><div class="corner br"></div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend-bar">
+          <div class="legend-item"><span class="dot high"></span>High (&gt;75%)</div>
+          <div class="legend-item"><span class="dot med"></span>Medium (50–75%)</div>
+          <div class="legend-item"><span class="dot low"></span>Low (&lt;50%)</div>
+        </div>
+      </div>
+
+      <aside class="control-panel">
+        <div class="stat-card primary">
+          <span class="stat-label">Status</span>
+          <span class="stat-value" id="statusText">Initializing</span>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">FPS</span>
+            <span class="stat-value mono" id="fpsDisplay">—</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Joints Visible</span>
+            <span class="stat-value mono" id="jointsDisplay">—</span>
+          </div>
+        </div>
+
+        <!-- Visual mode toggles -->
+        <div class="toggle-group">
+          <label class="toggle-label">Keypoints</label>
+          <label class="switch">
+            <input type="checkbox" id="showKeypoints" checked />
+            <span class="track"></span>
+          </label>
+        </div>
+        <div class="toggle-group">
+          <label class="toggle-label">Skeleton Lines</label>
+          <label class="switch">
+            <input type="checkbox" id="showSkeleton" checked />
+            <span class="track"></span>
+          </label>
+        </div>
+        <div class="toggle-group">
+          <label class="toggle-label">Joint Labels</label>
+          <label class="switch">
+            <input type="checkbox" id="showLabels" />
+            <span class="track"></span>
+          </label>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Min Confidence</label>
+          <div class="slider-row">
+            <input type="range" id="minConfidence" min="0.1" max="0.9" step="0.05" value="0.4" />
+            <span class="slider-val" id="confidenceVal">0.4</span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Line Thickness</label>
+          <div class="slider-row">
+            <input type="range" id="lineWidth" min="1" max="8" step="0.5" value="3" />
+            <span class="slider-val" id="lineWidthVal">3</span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="toggleBtn">Pause</button>
+
+        <!-- Body segments breakdown -->
+        <div class="segment-card">
+          <h3 class="list-title">Body Segments</h3>
+          <div class="segment-list" id="segmentList"></div>
+        </div>
+      </aside>
+    </main>
+
+  </div>
+  <script src="model.js"></script>
+</body>
+</html>

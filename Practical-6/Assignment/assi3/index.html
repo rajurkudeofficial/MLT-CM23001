@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PoseNet — Multi-Pose Detection</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet@2.2.2/dist/posenet.min.js"></script>
+</head>
+<body>
+  <div class="app-wrapper">
+
+    <header class="app-header">
+      <div class="header-logo">
+        <div class="logo-icon">👥</div>
+        <span class="logo-text">Multi-Pose <em>Detector</em></span>
+      </div>
+      <nav class="header-nav">
+        <a href="../../index.html" class="nav-link">← Live</a>
+        <a href="../assi1/index.html" class="nav-link">Skeleton</a>
+        <a href="../assi2/index.html" class="nav-link">Squats</a>
+        <a href="index.html" class="nav-link active">Multi-Pose</a>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <div class="video-panel">
+        <div class="video-container">
+          <video id="video" autoplay muted playsinline></video>
+          <canvas id="canvas"></canvas>
+          <div class="video-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <p>Loading model…</p>
+          </div>
+
+          <!-- Mode badge -->
+          <div class="mode-badge" id="modeBadge">SINGLE</div>
+          <!-- Person count badge -->
+          <div class="person-count-badge" id="personCountBadge">0 persons</div>
+
+          <div class="corner tl"></div><div class="corner tr"></div>
+          <div class="corner bl"></div><div class="corner br"></div>
+        </div>
+      </div>
+
+      <aside class="control-panel">
+        <div class="stat-card primary">
+          <span class="stat-label">Mode</span>
+          <span class="stat-value" id="modeText">Single Pose</span>
+        </div>
+
+        <!-- Toggle button -->
+        <button class="btn btn-toggle" id="modeToggleBtn">
+          <span class="btn-icon">⇄</span> Switch to Multi-Pose
+        </button>
+
+        <!-- Stats grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Persons</span>
+            <span class="stat-value mono accent" id="personCount">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">FPS</span>
+            <span class="stat-value mono" id="fpsDisplay">—</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Avg Confidence</span>
+            <span class="stat-value mono" id="avgConfDisplay">—</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Best Pose</span>
+            <span class="stat-value mono" id="bestPoseDisplay">—</span>
+          </div>
+        </div>
+
+        <!-- Multi-pose settings (shown only in multi mode) -->
+        <div class="settings-group" id="multiSettings">
+          <div class="control-group">
+            <label class="control-label">Max Poses</label>
+            <div class="slider-row">
+              <input type="range" id="maxPoses" min="1" max="6" step="1" value="3" />
+              <span class="slider-val" id="maxPosesVal">3</span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">NMS Radius</label>
+            <div class="slider-row">
+              <input type="range" id="nmsRadius" min="10" max="50" step="5" value="20" />
+              <span class="slider-val" id="nmsRadiusVal">20</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Min Confidence</label>
+          <div class="slider-row">
+            <input type="range" id="minConfidence" min="0.1" max="0.9" step="0.05" value="0.4" />
+            <span class="slider-val" id="confidenceVal">0.4</span>
+          </div>
+        </div>
+
+        <!-- Detected persons list -->
+        <div class="persons-card">
+          <h3 class="list-title">Detected Persons</h3>
+          <div class="persons-list" id="personsList">
+            <p class="empty-msg">No poses detected.</p>
+          </div>
+        </div>
+
+        <!-- Mode comparison table -->
+        <div class="compare-card">
+          <h3 class="list-title">Mode Comparison</h3>
+          <table class="compare-table">
+            <thead><tr><th>Feature</th><th>Single</th><th>Multi</th></tr></thead>
+            <tbody>
+              <tr><td>Speed</td><td class="good">Faster</td><td class="warn">Slower</td></tr>
+              <tr><td>Persons</td><td>1</td><td>1–6</td></tr>
+              <tr><td>Algorithm</td><td>Greedy</td><td>NMS</td></tr>
+              <tr><td>Accuracy</td><td class="good">Higher</td><td class="warn">Varies</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </aside>
+    </main>
+  </div>
+  <script src="model.js"></script>
+</body>
+</html>

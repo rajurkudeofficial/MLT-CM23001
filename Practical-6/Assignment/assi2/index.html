@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PoseNet — Squat Counter</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet@2.2.2/dist/posenet.min.js"></script>
+</head>
+<body>
+  <div class="app-wrapper">
+
+    <header class="app-header">
+      <div class="header-logo">
+        <div class="logo-icon">🏋️</div>
+        <span class="logo-text">Squat <em>Counter</em></span>
+      </div>
+      <nav class="header-nav">
+        <a href="../../index.html" class="nav-link">← Live</a>
+        <a href="../assi1/index.html" class="nav-link">Skeleton</a>
+        <a href="index.html" class="nav-link active">Squats</a>
+        <a href="../assi3/index.html" class="nav-link">Multi-Pose</a>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <div class="video-panel">
+        <div class="video-container">
+          <video id="video" autoplay muted playsinline></video>
+          <canvas id="canvas"></canvas>
+          <div class="video-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <p>Loading model…</p>
+          </div>
+          <!-- Posture badge overlaid on video -->
+          <div class="posture-badge" id="postureBadge">—</div>
+          <div class="corner tl"></div><div class="corner tr"></div>
+          <div class="corner bl"></div><div class="corner br"></div>
+        </div>
+      </div>
+
+      <aside class="control-panel">
+
+        <!-- Rep counter hero -->
+        <div class="rep-hero">
+          <span class="rep-label">SQUATS</span>
+          <span class="rep-count" id="repCount">0</span>
+          <button class="reset-btn" id="resetBtn">Reset</button>
+        </div>
+
+        <!-- Posture status -->
+        <div class="posture-card" id="postureCard">
+          <span class="posture-label">Posture</span>
+          <span class="posture-val" id="postureText">—</span>
+        </div>
+
+        <!-- Angle display -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Left Knee °</span>
+            <span class="stat-value mono" id="leftAngle">—</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Right Knee °</span>
+            <span class="stat-value mono" id="rightAngle">—</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">FPS</span>
+            <span class="stat-value mono" id="fpsDisplay">—</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Status</span>
+            <span class="stat-value" id="statusText" style="font-size:.85rem">Init</span>
+          </div>
+        </div>
+
+        <!-- Thresholds -->
+        <div class="control-group">
+          <label class="control-label">Down Threshold (°)</label>
+          <div class="slider-row">
+            <input type="range" id="downThreshold" min="60" max="120" step="5" value="90" />
+            <span class="slider-val" id="downVal">90°</span>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Up Threshold (°)</label>
+          <div class="slider-row">
+            <input type="range" id="upThreshold" min="140" max="175" step="5" value="160" />
+            <span class="slider-val" id="upVal">160°</span>
+          </div>
+        </div>
+
+        <!-- Rep history -->
+        <div class="history-card">
+          <h3 class="list-title">Rep Log</h3>
+          <div class="history-list" id="historyList">
+            <p class="history-empty">No reps recorded yet.</p>
+          </div>
+        </div>
+
+      </aside>
+    </main>
+
+  </div>
+  <script src="model.js"></script>
+</body>
+</html>
