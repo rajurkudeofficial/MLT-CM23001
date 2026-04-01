@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assignment 3 — Export &amp; Import</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="badge">Assignment 3</span>
+      <h1>Export <span class="accent">&amp; Import</span></h1>
+      <p class="subtitle">Download model files, re-upload them, and predict again</p>
+      <nav class="nav-links">
+        <a href="../assi2/index.html">← Assignment 2: Load &amp; Predict</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- TRAIN & EXPORT CARD -->
+    <section class="card">
+      <div class="card-label">Export</div>
+      <h2>Train &amp; Export Model</h2>
+      <p class="card-desc">Train a model and download it as <code>model.json</code> + <code>weights.bin</code> files.</p>
+
+      <button class="btn btn-primary" id="train-btn" onclick="trainAndExport()">⚡ Train Model</button>
+
+      <div class="progress-wrap" id="progress-wrap" style="display:none">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <span id="progress-label">Training…</span>
+      </div>
+
+      <div class="status" id="train-status" style="display:none"></div>
+
+      <div class="download-area" id="download-area" style="display:none">
+        <h3>Download Model Files</h3>
+        <p>Click each button to download the files. You'll need both to re-import.</p>
+        <div class="btn-group">
+          <button class="btn btn-green" id="dl-json-btn" onclick="downloadJson()">⬇ Download model.json</button>
+          <button class="btn btn-green" id="dl-bin-btn" onclick="downloadBin()">⬇ Download weights.bin</button>
+        </div>
+        <div class="file-chips">
+          <span class="chip"><span class="chip-icon">📄</span>model.json — topology + metadata</span>
+          <span class="chip"><span class="chip-icon">🗜</span>weights.bin — binary weight data</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMPORT CARD -->
+    <section class="card">
+      <div class="card-label">Import</div>
+      <h2>Re-upload &amp; Reload</h2>
+      <p class="card-desc">Upload both files together to restore the model in-browser.</p>
+
+      <div class="upload-zone" id="upload-zone">
+        <div class="upload-icon">📁</div>
+        <p>Select <strong>model.json</strong> and <strong>weights.bin</strong> together</p>
+        <label class="btn btn-outline upload-label">
+          Choose Files
+          <input type="file" id="file-input" accept=".json,.bin" multiple onchange="handleFileUpload(this.files)"/>
+        </label>
+        <div class="file-list" id="file-list"></div>
+      </div>
+
+      <button class="btn btn-primary" id="load-files-btn" onclick="loadFromFiles()" disabled>📂 Load Uploaded Files</button>
+
+      <div class="status" id="import-status" style="display:none"></div>
+    </section>
+
+    <!-- PREDICT CARD -->
+    <section class="card">
+      <div class="card-label">Test</div>
+      <h2>Test Predictions</h2>
+      <p class="card-desc">Compare original in-memory model vs the file-imported model.</p>
+
+      <div class="input-row">
+        <input type="number" id="pred-x" placeholder="Enter x value" step="0.5"/>
+        <button class="btn btn-primary" onclick="runPredictions()">🔮 Predict</button>
+      </div>
+
+      <div class="pred-grid" id="pred-grid" style="display:none">
+        <div class="pred-box orig">
+          <div class="pred-box-label">Original (in-memory)</div>
+          <div class="pred-box-value" id="orig-pred">—</div>
+          <div class="pred-box-sub">trained this session</div>
+        </div>
+        <div class="pred-box imported">
+          <div class="pred-box-label">Imported (from files)</div>
+          <div class="pred-box-value" id="imported-pred">—</div>
+          <div class="pred-box-sub">loaded from files</div>
+        </div>
+        <div class="pred-box ideal">
+          <div class="pred-box-label">Ideal (2x + 1)</div>
+          <div class="pred-box-value" id="ideal-pred">—</div>
+          <div class="pred-box-sub">ground truth</div>
+        </div>
+        <div class="pred-box diff">
+          <div class="pred-box-label">Model Difference</div>
+          <div class="pred-box-value" id="diff-pred">—</div>
+          <div class="pred-box-sub">orig vs imported</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">Assignment 3 — Export &amp; Import | Practical 7</footer>
+  <script src="model.js"></script>
+</body>
+</html>
