@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuralLens — Transfer Learning Studio</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast-container"></div>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="logo">
+    <div class="logo-icon">⬡</div>
+    <span class="logo-text">NeuralLens</span>
+    <span class="logo-tag">Transfer Learning Studio</span>
+  </div>
+  <div class="header-actions">
+    <button class="btn-ghost" id="btn-reset">↺ Reset</button>
+    <button class="btn-ghost" id="btn-export">⬇ Export</button>
+    <button class="btn-primary" id="btn-save">💾 Save Model</button>
+    <button class="btn-primary" id="btn-load">📂 Load Model</button>
+  </div>
+</header>
+
+<div class="app-layout">
+
+  <!-- LEFT SIDEBAR: CLASS MANAGEMENT -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>Dataset Classes</h2>
+      <button class="btn-add" id="btn-add-class">+ Add Class</button>
+    </div>
+    <div id="class-list" class="class-list"></div>
+    <div class="dataset-summary" id="dataset-summary">
+      <div class="summary-item"><span id="total-classes">0</span><label>Classes</label></div>
+      <div class="summary-item"><span id="total-images">0</span><label>Images</label></div>
+      <div class="summary-item"><span id="model-status-badge">Untrained</span><label>Model</label></div>
+    </div>
+  </aside>
+
+  <!-- MAIN PANEL -->
+  <main class="main-panel">
+
+    <!-- DATA COLLECTION -->
+    <section class="card" id="data-section">
+      <div class="card-header">
+        <h3>📸 Data Collection</h3>
+        <div class="class-selector-wrap">
+          <label>Active Class:</label>
+          <select id="active-class-select"><option value="">— Select —</option></select>
+        </div>
+      </div>
+      <div class="data-inputs">
+        <!-- Webcam -->
+        <div class="input-block webcam-block">
+          <video id="webcam" autoplay playsinline muted></video>
+          <canvas id="snapshot-canvas" style="display:none"></canvas>
+          <div class="webcam-controls">
+            <button class="btn-cam" id="btn-start-cam">📷 Start Webcam</button>
+            <button class="btn-cam btn-capture" id="btn-capture" disabled>Capture</button>
+          </div>
+        </div>
+        <!-- Upload + Drag-Drop -->
+        <div class="input-block upload-block" id="drop-zone">
+          <div class="drop-icon">☁</div>
+          <p>Drag & drop images here</p>
+          <p class="or-text">— or —</p>
+          <label class="btn-upload" for="file-input">Browse Files</label>
+          <input type="file" id="file-input" accept="image/*" multiple hidden/>
+        </div>
+      </div>
+      <!-- Image Preview Grid -->
+      <div id="preview-grid" class="preview-grid"></div>
+    </section>
+
+    <!-- TRAINING PANEL -->
+    <section class="card" id="train-section">
+      <div class="card-header">
+        <h3>🏋️ Training Configuration</h3>
+      </div>
+      <div class="train-controls">
+        <div class="control-group">
+          <label>Epochs</label>
+          <input type="number" id="epochs" value="20" min="1" max="200"/>
+        </div>
+        <div class="control-group">
+          <label>Batch Size</label>
+          <input type="number" id="batch-size" value="16" min="1" max="128"/>
+        </div>
+        <div class="control-group">
+          <label>Learning Rate</label>
+          <input type="number" id="learning-rate" value="0.0001" step="0.00001" min="0.00001" max="0.1"/>
+        </div>
+      </div>
+      <div class="train-actions">
+        <button class="btn-train" id="btn-train">▶ Start Training</button>
+        <button class="btn-ghost" id="btn-stop" disabled>⏹ Stop</button>
+      </div>
+      <div id="training-progress" class="training-progress" style="display:none">
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="progress-label" id="progress-label">Epoch 0/0</div>
+        <div class="live-stats">
+          <div class="stat-box"><span id="live-loss">—</span><label>Loss</label></div>
+          <div class="stat-box"><span id="live-acc">—</span><label>Accuracy</label></div>
+        </div>
+        <canvas id="training-chart" width="600" height="180"></canvas>
+        <div id="training-log" class="training-log"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- RIGHT PANEL: PREDICTION -->
+  <aside class="right-panel">
+    <section class="card predict-card">
+      <div class="card-header">
+        <h3>🔍 Prediction</h3>
+      </div>
+      <div class="predict-inputs">
+        <div class="pred-tab-bar">
+          <button class="pred-tab active" data-tab="webcam">Webcam</button>
+          <button class="pred-tab" data-tab="upload">Upload</button>
+        </div>
+        <div class="pred-tab-content" id="pred-webcam-tab">
+          <video id="pred-webcam" autoplay playsinline muted></video>
+          <button class="btn-cam" id="btn-pred-cam">📷 Start Webcam</button>
+          <button class="btn-cam btn-capture" id="btn-pred-capture" disabled>Predict Live</button>
+        </div>
+        <div class="pred-tab-content hidden" id="pred-upload-tab">
+          <div class="pred-image-wrap">
+            <img id="pred-preview" src="" alt="" style="display:none"/>
+            <div class="pred-placeholder">Upload an image</div>
+          </div>
+          <label class="btn-upload" for="pred-file-input">Choose Image</label>
+          <input type="file" id="pred-file-input" accept="image/*" hidden/>
+          <button class="btn-train" id="btn-predict-upload" style="margin-top:8px">Predict</button>
+        </div>
+      </div>
+      <!-- Results -->
+      <div id="prediction-results" class="prediction-results">
+        <div class="pred-label" id="pred-top-label">—</div>
+        <div class="pred-conf" id="pred-top-conf">Upload image & predict</div>
+        <div id="confidence-bars" class="confidence-bars"></div>
+      </div>
+    </section>
+
+    <!-- MODEL INFO -->
+    <section class="card">
+      <div class="card-header"><h3>📊 Model Info</h3></div>
+      <div class="model-info" id="model-info">
+        <div class="info-row"><span>Base Model</span><strong>MobileNet v2</strong></div>
+        <div class="info-row"><span>Input Size</span><strong>224×224</strong></div>
+        <div class="info-row"><span>Status</span><strong id="info-status">Not Loaded</strong></div>
+        <div class="info-row"><span>Classes</span><strong id="info-classes">0</strong></div>
+        <div class="info-row"><span>Best Acc</span><strong id="info-acc">—</strong></div>
+      </div>
+    </section>
+  </aside>
+
+</div>
+
+<!-- Add Class Modal -->
+<div class="modal-overlay" id="class-modal" style="display:none">
+  <div class="modal">
+    <h3>Create New Class</h3>
+    <input type="text" id="class-name-input" placeholder="e.g. Apple, Banana..."/>
+    <div class="modal-colors" id="modal-colors"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="modal-cancel">Cancel</button>
+      <button class="btn-primary" id="modal-confirm">Create</button>
+    </div>
+  </div>
+</div>
+
+<script src="model.js"></script>
+</body>
+</html>
