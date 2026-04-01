@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assignment 1 — MobileNet Fruit Classifier</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<header>
+  <div class="brand">
+    <span class="brand-icon">🍎</span>
+    <div>
+      <h1>Fruit Classifier</h1>
+      <p>Assignment 1 — MobileNet Transfer Learning</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="status-pill" id="status-pill">⏳ Loading...</div>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- LEFT: Classes + Upload -->
+  <div class="left-col">
+    <div class="section-title">📁 Training Dataset</div>
+
+    <!-- 3 Fixed Classes -->
+    <div class="class-panels" id="class-panels">
+      <!-- Rendered by JS -->
+    </div>
+
+    <!-- Dataset Summary Card -->
+    <div class="summary-card" id="summary-card">
+      <h3>Dataset Summary</h3>
+      <div class="summary-grid" id="summary-grid"></div>
+    </div>
+  </div>
+
+  <!-- CENTER: Training -->
+  <div class="center-col">
+    <div class="section-title">🏋️ Training</div>
+
+    <div class="train-card">
+      <div class="train-params">
+        <div class="param">
+          <label>Epochs</label>
+          <input type="number" id="epochs" value="30" min="1" max="200"/>
+        </div>
+        <div class="param">
+          <label>Batch Size</label>
+          <input type="number" id="batch-size" value="16" min="1" max="64"/>
+        </div>
+        <div class="param">
+          <label>Val Split</label>
+          <input type="number" id="val-split" value="0.2" step="0.05" min="0.1" max="0.4"/>
+        </div>
+      </div>
+      <button class="btn-train" id="btn-train">▶ Train Model</button>
+      <button class="btn-secondary" id="btn-stop" disabled>⏹ Stop</button>
+
+      <!-- Progress -->
+      <div id="progress-wrap" style="display:none">
+        <div class="epoch-info" id="epoch-info">Initializing...</div>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+
+        <!-- Live accuracy display -->
+        <div class="live-metrics">
+          <div class="metric-box train-box">
+            <div class="metric-val" id="train-acc-val">—</div>
+            <div class="metric-lbl">Training Acc</div>
+          </div>
+          <div class="metric-box val-box">
+            <div class="metric-val" id="val-acc-val">—</div>
+            <div class="metric-lbl">Validation Acc</div>
+          </div>
+          <div class="metric-box loss-box">
+            <div class="metric-val" id="loss-val">—</div>
+            <div class="metric-lbl">Loss</div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <canvas id="acc-chart" width="520" height="200"></canvas>
+        <canvas id="loss-chart" width="520" height="160"></canvas>
+      </div>
+    </div>
+
+    <!-- Results after training -->
+    <div class="results-card" id="results-card" style="display:none">
+      <h3>📊 Training Results</h3>
+      <div class="final-metrics" id="final-metrics"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Prediction -->
+  <div class="right-col">
+    <div class="section-title">🔍 Predict</div>
+    <div class="predict-card">
+      <div class="pred-upload-area" id="pred-drop">
+        <img id="pred-img" src="" style="display:none"/>
+        <div class="pred-empty" id="pred-empty">
+          <span>🖼</span>
+          <p>Drop or upload image</p>
+        </div>
+        <label for="pred-input" class="pred-upload-btn">Upload Image</label>
+        <input type="file" id="pred-input" accept="image/*" hidden/>
+      </div>
+
+      <!-- Webcam -->
+      <video id="webcam" autoplay playsinline muted style="display:none"></video>
+      <div class="cam-controls">
+        <button class="btn-sm" id="btn-cam">📷 Webcam</button>
+        <button class="btn-sm" id="btn-capture" disabled>Snap & Predict</button>
+      </div>
+
+      <button class="btn-predict" id="btn-predict">Predict →</button>
+
+      <div class="pred-result" id="pred-result" style="display:none">
+        <div class="pred-badge" id="pred-badge"></div>
+        <div class="pred-bars" id="pred-bars"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="model.js"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assignment 2 — Confusion Matrix Evaluation</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Satoshi:ital,opsz,wght@0,8..30,300..900;1,8..30,300..900&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<header>
+  <div class="hdr-left">
+    <span class="hdr-icon">🧮</span>
+    <div>
+      <h1>Model Evaluation</h1>
+      <p>Assignment 2 — Confusion Matrix & Accuracy Analysis</p>
+    </div>
+  </div>
+  <div class="hdr-status" id="hdr-status">Loading...</div>
+</header>
+
+<div class="page-grid">
+
+  <!-- COL 1: Training Data -->
+  <div class="col col-data">
+    <div class="panel">
+      <div class="panel-title">Training Data</div>
+
+      <div id="class-list-train" class="class-list"></div>
+
+      <button class="btn-primary" id="btn-train">Train Model</button>
+      <div id="train-mini-progress" style="display:none">
+        <div class="mini-bar-wrap"><div class="mini-bar" id="mini-bar"></div></div>
+        <div class="mini-label" id="mini-label">Epoch 0</div>
+        <div class="mini-metrics" id="mini-metrics"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COL 2: Evaluation -->
+  <div class="col col-eval">
+
+    <!-- Accuracy Summary -->
+    <div class="panel">
+      <div class="panel-title">Accuracy Metrics</div>
+      <div class="acc-summary" id="acc-summary">
+        <div class="acc-box">
+          <div class="acc-val" id="overall-acc">—</div>
+          <div class="acc-lbl">Overall Accuracy</div>
+        </div>
+        <div class="acc-box">
+          <div class="acc-val" id="macro-prec">—</div>
+          <div class="acc-lbl">Macro Precision</div>
+        </div>
+        <div class="acc-box">
+          <div class="acc-val" id="macro-recall">—</div>
+          <div class="acc-lbl">Macro Recall</div>
+        </div>
+        <div class="acc-box">
+          <div class="acc-val" id="macro-f1">—</div>
+          <div class="acc-lbl">F1 Score</div>
+        </div>
+      </div>
+      <button class="btn-secondary" id="btn-evaluate">Evaluate on Training Data</button>
+    </div>
+
+    <!-- Confusion Matrix -->
+    <div class="panel">
+      <div class="panel-title">Confusion Matrix</div>
+      <div class="cm-legend">
+        <div class="cm-legend-item"><div class="cm-dot low"></div> Low</div>
+        <div class="cm-legend-item"><div class="cm-dot high"></div> High (correct)</div>
+      </div>
+      <div id="confusion-matrix" class="confusion-matrix">
+        <div class="cm-placeholder">Train model & evaluate to see confusion matrix</div>
+      </div>
+    </div>
+
+    <!-- Per-class Stats -->
+    <div class="panel">
+      <div class="panel-title">Per-Class Statistics</div>
+      <div id="per-class-stats" class="per-class-stats">
+        <div class="cm-placeholder">Run evaluation to see per-class stats</div>
+      </div>
+    </div>
+
+    <!-- Misclassifications -->
+    <div class="panel" id="misc-panel" style="display:none">
+      <div class="panel-title">⚠️ Misclassifications</div>
+      <div id="misc-grid" class="misc-grid"></div>
+    </div>
+  </div>
+
+  <!-- COL 3: Class Config -->
+  <div class="col col-config">
+    <div class="panel">
+      <div class="panel-title">Class Configuration</div>
+      <button class="btn-secondary btn-sm-full" id="btn-add-class">+ Add Class</button>
+      <div id="class-config-list" class="class-config-list"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Training Parameters</div>
+      <div class="params-list">
+        <div class="param-row"><label>Epochs</label><input type="number" id="epochs" value="25" min="5" max="200"/></div>
+        <div class="param-row"><label>Batch Size</label><input type="number" id="batchSize" value="16" min="4" max="64"/></div>
+        <div class="param-row"><label>Val Split</label><input type="number" id="valSplit" value="0.2" step="0.05" min="0.1" max="0.4"/></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Add class modal -->
+<div id="modal" class="modal-overlay" style="display:none">
+  <div class="modal-box">
+    <h3>Add Class</h3>
+    <input type="text" id="modal-name" placeholder="Class name..."/>
+    <div id="modal-colors" class="modal-colors"></div>
+    <div class="modal-btns">
+      <button class="btn-secondary" id="modal-cancel">Cancel</button>
+      <button class="btn-primary" id="modal-ok">Add</button>
+    </div>
+  </div>
+</div>
+
+<script src="model.js"></script>
+</body>
+</html>
