@@ -1,5 +1,7 @@
 # MNIST Digit Recognition using TensorFlow.js (CNN)
 
+## Live - https://rajurkudeofficial.github.io/MLT-CM23001/Practical-2/index.html
+
 ## 📌 Overview
 This project implements **Handwritten Digit Recognition** using a **Convolutional Neural Network (CNN)** trained on the **MNIST dataset**.  
 The model is trained **offline on Kaggle using dual Tesla T4 GPUs** for faster and more accurate training, then converted to **TensorFlow.js** format and deployed in the browser using **JavaScript and CDN only** (no backend, no Node.js).
